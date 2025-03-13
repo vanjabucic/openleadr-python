@@ -345,6 +345,10 @@ def timedeltaformat(value):
         formatted += f"{minutes}M"
     if seconds:
         formatted += f"{seconds}S"
+    # Icetec add for Uplight: Don't allow a plain P to appear
+    # Handle 0 seconds duration as 0 minutes
+    if formatted == "P":
+        formatted = "PT0M"
     return formatted
 
 
@@ -390,10 +394,15 @@ def ensure_str(obj):
     else:
         raise TypeError("Must be bytes or str")
 
-
+# Icetec add for Uplight: Out of spec VTN fingerprint requirement: plain SHA1 of the certificate
 def certificate_fingerprint_from_der(der_bytes):
-    hash_ = hashlib.sha256(der_bytes).digest().hex()
-    return ":".join([hash_[i:i+2].upper() for i in range(44, 64, 2)])
+    hash_ = hashlib.sha1(der_bytes).digest().hex()
+    #print(f"Certificate fingerprint: {hash_}")
+    return hash_
+
+# def certificate_fingerprint_from_der(der_bytes):
+#     hash_ = hashlib.sha256(der_bytes).digest().hex()
+#     return ":".join([hash_[i:i+2].upper() for i in range(44, 64, 2)])
 
 
 def certificate_fingerprint(certificate_str):

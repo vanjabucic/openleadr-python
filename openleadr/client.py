@@ -188,7 +188,11 @@ class OpenADRClient:
         if self.report_queue_task:
             self.report_queue_task.cancel()
         await self.client_session.close()
-        await asyncio.sleep(0)
+        await asyncio.sleep(1)
+        # Icetec add for Uplight: Kill the loop on errors
+        # Stop the main loop, allow the app to exit
+        logger.warning('stop(): Closing client session and event loop...')
+        asyncio.get_event_loop().stop()
 
     def add_handler(self, handler, callback):
         """
@@ -912,6 +916,8 @@ class OpenADRClient:
         # Always set the dtstart of the report to the earliest datetime of any of the intervals
         if outgoing_report.intervals:
             outgoing_report.dtstart = min(interval.dtstart for interval in outgoing_report.intervals)
+            # Icetec add for Uplight: Report must have duration element
+            outgoing_report.duration = report.duration
 
         # Figure out if the report is complete after this sampling
         if data_collection_mode == 'incremental' and report_back_duration is not None\

@@ -9,6 +9,11 @@
         <xcal:date-time>{{ report.dtstart|datetimeformat }}</xcal:date-time>
       </xcal:dtstart>
       {% endif %}
+      {% if report.duration is defined and report.duration is not none %}
+      <xcal:duration>
+        <xcal:duration>{{ report.duration|timedeltaformat }}</xcal:duration>
+      </xcal:duration>
+      {% endif %}
 
       {% if report.intervals %}
       <strm:intervals xmlns:strm="urn:ietf:params:xml:ns:icalendar-2.0:stream" xmlns:xcal="urn:ietf:params:xml:ns:icalendar-2.0">
