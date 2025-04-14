@@ -907,7 +907,9 @@ class OpenADRClient:
                                                                     duration=granularity))
                         else:
                             intervals.append(objects.ReportInterval(dtstart=dt,
-                                                                    report_payload=report_payload))
+                                                                    report_payload=report_payload,
+                                                                    # Icetec add for Uplight: always report interval duration
+                                                                    duration=granularity))
                 except KeyError:
                     logger.error(f"No callback found for r_id {r_id} in report with report_specifier_id {report_specifier_id}")
         outgoing_report.intervals = intervals
