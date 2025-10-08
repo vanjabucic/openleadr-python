@@ -514,11 +514,12 @@ def cron_config(interval, randomize_seconds=False):
         minute = "*"
         hour = "*"
     elif interval < timedelta(hours=1):
-        second = "0"
+        # Execute some time after the top of the minute to allow backend data to settle
+        second = "20"
         minute = f"*/{int(interval.total_seconds()/60)}"
         hour = "*"
     elif interval < timedelta(hours=24):
-        second = "0"
+        second = "20"
         minute = "0"
         hour = f"*/{int(interval.total_seconds()/3600)}"
     else:
